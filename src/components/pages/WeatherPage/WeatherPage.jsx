@@ -1,5 +1,6 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { connect } from 'react-redux'
+import { makeStyles } from '@material-ui/core/styles'
 import {
 	getLocationAutocomplete,
 	setCurrentLocation,
@@ -8,29 +9,41 @@ import {
 } from '../../../store/actions'
 import { Autocomplete, WeatherWidget } from '.'
 
-class WeatherPage extends Component {
-	handleInputChange = (e) => {
+const useStyles = makeStyles(() => ({
+	autocompleteContainer: {
+		maxWidth: 480,
+		margin: '32px auto 0',
+		padding: '0 12px',
+	},
+  }))
+  
+const WeatherPage = (props) => {
+	const classes = useStyles()
+
+	const handleInputChange = (e) => {
 		const { value } = e.target
 
 		if (value) {
-			this.props.getLocationAutocomplete(value)
+			props.getLocationAutocomplete(value)
 		}
 	}
 
-	handleSelect = (location) => {
+	const handleSelect = (location) => {
 		const { key, value: name } = location
-		this.props.setCurrentLocation({ name, key })
-		this.props.getCurrentWeather(key)
-		this.props.getForecast(key)
+		props.setCurrentLocation({ name, key })
+		props.getCurrentWeather(key)
+		props.getForecast(key)
 	}
 
-	render = () => (
-		<div>
-			<Autocomplete
-				suggestions={this.props.suggestions}
-				onInput={this.handleInputChange}
-				onSelect={this.handleSelect}
-			/>
+	return (
+		<div className={classes.weatherPage}>
+			<div className={classes.autocompleteContainer}>
+				<Autocomplete
+					suggestions={props.suggestions}
+					onInput={handleInputChange}
+					onSelect={handleSelect}
+				/>
+			</div>
 			<WeatherWidget />
 		</div>
 	)

@@ -10,7 +10,6 @@ import MenuItem from '@material-ui/core/MenuItem'
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
-    height: 250,
     minWidth: 290,
   },
   input: {
@@ -183,14 +182,14 @@ const Autocomplete = (props) => {
           styles={selectStyles}
           inputId="react-select-single"
           TextFieldProps={{
-            label: 'Country',
+            label: 'Location',
             InputLabelProps: {
               htmlFor: 'react-select-single',
               shrink: true,
             },
             onInput,
           }}
-          placeholder="Search a country (start with a)"
+          placeholder="Search a place"
           options={props.suggestions}
           components={components}
           value={single}

@@ -8,15 +8,15 @@ import {
 } from './actions.consts'
 import { FAVORITE_LOCATION_KEYS } from '../consts'
 
-let initialFavoriteLocationKeys = localStorage.getItem(FAVORITE_LOCATION_KEYS)
-initialFavoriteLocationKeys = initialFavoriteLocationKeys ? JSON.parse(initialFavoriteLocationKeys) : []
+let initialFavoriteLocations = localStorage.getItem(FAVORITE_LOCATION_KEYS)
+initialFavoriteLocations = initialFavoriteLocations ? JSON.parse(initialFavoriteLocations) : []
 
 const initialState = {
     suggestions: [],
     currentLocation: null,
     currentWeather: null,
     forecast: null,
-    favoriteLocationKeys: initialFavoriteLocationKeys,
+    favoriteLocations: initialFavoriteLocations,
     favoriteLocationsCurrentWeather: [],
 }
 
@@ -49,7 +49,7 @@ const reducer = (state = initialState, action) => {
         case SET_FAVORITE_LOCATION_KEYS:
             return {
                 ...state,
-                favoriteLocationKeys: action.value,
+                favoriteLocations: action.value,
             }
 
         case SET_FAVORITE_LOCATIONS_CURRENT_WEATHER:

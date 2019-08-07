@@ -4,6 +4,7 @@ import {
     WEATHER_API_KEY,
     LOCATION_AUTOCOMPLETE_PATH,
     FORECAST_PATH,
+    CURRENT_WEATHER_PATH,
 } from './consts'
 
 import { locationAutocompleteResponse, currentWeatherResponse, forecastResponse } from './mocks'
@@ -50,7 +51,7 @@ const getCurrentWeather = (locationKey) => {
     }
 
     return new Promise((resolve, reject) => {
-        const path = `${LOCATION_AUTOCOMPLETE_PATH}/${locationKey}?apikey=${WEATHER_API_KEY}&language=en-us` 
+        const path = `${CURRENT_WEATHER_PATH}/${locationKey}?apikey=${WEATHER_API_KEY}&language=en-us` 
 
         axios.get(path)
             .then(res => {

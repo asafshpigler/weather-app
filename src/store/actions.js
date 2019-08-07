@@ -19,6 +19,7 @@ const _formatSuggestions = (suggestions) => (
 
 const getLocationAutocomplete = (value) => (dispatch) => (
     api.getLocationAutocomplete(value).then((data) => {
+        if (!Array.isArray(data)) return
         const formattedSuggestions = _formatSuggestions(data)
         dispatch({ type: SET_SUGGESTIONS, value: formattedSuggestions })
     })
@@ -48,25 +49,26 @@ const getForecast = (locationKey) => (dispatch) => (
     })
 )
 
-const toggleFavoriteLocation = (locationKey) => (dispatch) => {
-    let favoriteLocationKeys = localStorage.getItem(FAVORITE_LOCATION_KEYS)
-    favoriteLocationKeys = favoriteLocationKeys ? JSON.parse(favoriteLocationKeys) : []
+const toggleFavoriteLocation = (currentLocation) => (dispatch) => {
+    let favoriteLocations = localStorage.getItem(FAVORITE_LOCATION_KEYS)
+    favoriteLocations = favoriteLocations ? JSON.parse(favoriteLocations) : []
 
-    if (favoriteLocationKeys.includes(locationKey)) {
-        favoriteLocationKeys = favoriteLocationKeys.filter(locKey => locKey !== locationKey)
+    if (favoriteLocations.some(loc => loc.key === currentLocation.key)) {
+        favoriteLocations = favoriteLocations.filter(loc => loc.key !== currentLocation.key)
     }
     else {
-        favoriteLocationKeys.push(locationKey)
+        favoriteLocations.push(currentLocation)
     }
 
-    localStorage.setItem(FAVORITE_LOCATION_KEYS, JSON.stringify(favoriteLocationKeys))
-    dispatch({ type: SET_FAVORITE_LOCATION_KEYS, value: favoriteLocationKeys })
+    localStorage.setItem(FAVORITE_LOCATION_KEYS, JSON.stringify(favoriteLocations))
+    dispatch({ type: SET_FAVORITE_LOCATION_KEYS, value: favoriteLocations })
 }
 
-const getFavoriteLocationsCurrentWeather = (favoriteLocationKeys) => (dispatch) => {
-    const prms = favoriteLocationKeys.map(locKey => api.getCurrentWeather(locKey))
+const getFavoriteLocationsCurrentWeather = (favoriteLocations) => (dispatch) => {
+    const prms = favoriteLocations.map(loc => api.getCurrentWeather(loc.key))
     Promise.all(prms).then((favoriteLocationsCurrentWeather) => {
-        dispatch({ type: SET_FAVORITE_LOCATIONS_CURRENT_WEATHER, value: favoriteLocationsCurrentWeather })
+        const value = favoriteLocationsCurrentWeather.map((loc, i) => ({ ...loc, name: favoriteLocations[i].name }))
+        dispatch({ type: SET_FAVORITE_LOCATIONS_CURRENT_WEATHER, value })
     })
 }
 
